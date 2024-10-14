@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch URL and Display Result</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 800px;
+        }
+
+        label, input, button {
+            display: block;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        @media (max-width: 600px) {
+            input[type="text"] {
+                font-size: 14px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+
+            th, td {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Fetch Data from URL</h2>
+
+        <label for="urlInput">Enter URL: </label>
+        <input type="text" id="urlInput" placeholder="https://jsonplaceholder.typicode.com/posts">
+        <button onclick="fetchData()">Fetch Data</button>
+
+        <h3>Fetched Data:</h3>
+
+        <table id="resultTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Body</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function fetchData() {
+            const url = document.getElementById('urlInput').value;
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const tableBody = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
+                    tableBody.innerHTML = ''; // Clear existing data
+
+                    data.forEach(item => {
+                        const row = tableBody.insertRow();
+                        const idCell = row.insertCell(0);
+                        const titleCell = row.insertCell(1);
+                        const bodyCell = row.insertCell(2);
+
+                        idCell.textContent = item.id;
+                        titleCell.textContent = item.title;
+                        bodyCell.textContent = item.body;
+                    });
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    alert('Error fetching data. Please check the URL.');
+                });
+        }
+    </script>
+
+</body>
+</html>
